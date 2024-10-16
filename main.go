@@ -145,7 +145,9 @@ func repositoriesHandler(w http.ResponseWriter, r *http.Request, params map[stri
 		wg.Add(1)
 		go func(repo RepositoryFromAPI) {
 			defer wg.Done()
-			languages := make(map[string]int) // Temporary map to hold raw languages data
+
+			// Temporary map to hold raw languages data
+			languages := make(map[string]int)
 			languagesURL := repo.LanguagesURL
 
 			// Create the GET Request to GithubAPI to retrieve languages data
@@ -176,12 +178,12 @@ func repositoriesHandler(w http.ResponseWriter, r *http.Request, params map[stri
 			}
 
 			// Convert the raw map to the desired structure
-			languagesDetail := make(Language) // This will hold the final structure
+			languagesDetail := make(Language)
 			for lang, bytes := range languages {
 				languagesDetail[lang] = LanguageDetail{Bytes: bytes} // Wrap byte count in LanguageDetail
 			}
 
-			// Create the repository object
+			// Create a repository object
 			repoResponse := Repository{
 				FullName:  repo.FullName,
 				Owner:     repo.Owner.Login,
@@ -226,9 +228,8 @@ func repositoriesHandler(w http.ResponseWriter, r *http.Request, params map[stri
 		}
 	}
 
-	// If the request has filter, apply it
+	// If a filter was provided, then filter the results
 	if filterType != "" {
-		// If a filter was provided, filter the results
 		reposResponse = filterByType(filterType, filterValue, reposResponse)
 	}
 
