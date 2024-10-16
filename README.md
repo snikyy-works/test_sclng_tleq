@@ -19,7 +19,7 @@ Please refer to the "Test" section to know how to use my JSON API.
 
 ## Requirements
 
-#### Setup GITHUB_TOKEN to access GithubAPI without rate limits
+Setup GITHUB_TOKEN to access GithubAPI without rate limits
 
 - **Step 1** : generate a "Personal Access Tokens" on Github
 - **Step 2** : create a .env file in this repository root
