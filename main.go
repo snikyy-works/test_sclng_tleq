@@ -126,13 +126,13 @@ func repositoriesHandler(w http.ResponseWriter, r *http.Request, params map[stri
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.WithError(err).Error("HTTP Status not ok after fetching repositories")
+		log.WithError(fmt.Errorf(resp.Status)).Error("HTTP Status non-OK after fetching repositories")
 	}
 
 	// Parse response
 	var repositories []RepositoryFromAPI
 	if err := json.NewDecoder(resp.Body).Decode(&repositories); err != nil {
-		log.Fatal("Error decoding response:", err)
+		log.Fatalf("Error decoding response from GithubAPI: %v", err)
 	}
 
 	// Setup to fetch languages data concurrently
@@ -166,7 +166,7 @@ func repositoriesHandler(w http.ResponseWriter, r *http.Request, params map[stri
 			defer resp.Body.Close()
 
 			if resp.StatusCode != http.StatusOK {
-				errCh <- fmt.Errorf("error fetching languages for %s: %w", repo.FullName, err)
+				errCh <- fmt.Errorf("error fetching languages for %s: %s", repo.FullName, resp.Status)
 				return
 			}
 
